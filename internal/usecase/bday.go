@@ -52,7 +52,7 @@ func (u *BdayUsecase) LoadBDays(currentTime time.Time) error {
 
 	msgText := "За прошедшую неделю др было у:"
 	for i, v := range UserList {
-		msgText += fmt.Sprintf("\n%d) %s дата:%s \n", i+1, v.Name, v.BirthDate.Format("2006-01-02"))
+		msgText += fmt.Sprintf("\n%d) %s \nдата др : %s \n\n", i+1, v.Name, v.BirthDate.Format("2006-01-02"))
 	}
 
 	msg := tgbotapi.NewMessage(bot.TestChatID, msgText)
