@@ -36,10 +36,6 @@ func (u *BdayUsecase) LoadBDays(currentTime time.Time) error {
 	UserList, err := u.Repository.Bday.FindAllBdayPeople(ts, currentTime, lastWeek)
 	switch err {
 	case nil:
-		if err != nil {
-			msg := tgbotapi.NewMessage(bot.DevChatID, err.Error())
-			u.bot.Send(msg)
-		}
 	case global.ErrNoData:
 		u.log.Debugln("ни у кого не было др")
 		return err
@@ -52,10 +48,10 @@ func (u *BdayUsecase) LoadBDays(currentTime time.Time) error {
 
 	msgText := "За прошедшую неделю день рождения был у:\n"
 	for _, v := range UserList {
-		msgText += fmt.Sprintf("\n%s \nдата дня рождения : %s \n",  v.Name, v.BirthDate.Format("2006-01-02"))
+		msgText += fmt.Sprintf("\n%s \nДата дня рождения : %s \n", v.Name, v.BirthDate.Format("2006-01-02"))
 	}
 
-	msg := tgbotapi.NewMessage(bot.TestChatID, msgText)
+	msg := tgbotapi.NewMessage(bot.DVSHCHAtID, msgText)
 	_, err = u.bot.Send(msg)
 	if err != nil {
 		msg := tgbotapi.NewMessage(bot.DevChatID, err.Error())
@@ -65,9 +61,10 @@ func (u *BdayUsecase) LoadBDays(currentTime time.Time) error {
 
 	for _, v := range UserList {
 		v.SetNextYear()
-		fmt.Println(v)
 		if err := u.Repository.Bday.UpdateBday(ts, v.ID, v.BirthDate); err != nil {
 			u.log.Errorln("не удалось обновить дату др, причина:", err)
+			msg := tgbotapi.NewMessage(bot.DevChatID, err.Error())
+			u.bot.Send(msg)
 			return global.ErrInternalError
 		}
 	}

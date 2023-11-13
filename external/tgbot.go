@@ -1,7 +1,6 @@
 package external
 
 import (
-	"fmt"
 	"tgbot/internal/transaction"
 	"tgbot/uimport"
 	"time"
@@ -31,8 +30,7 @@ func (e *BOT) RunBOT(sm transaction.SessionManager) {
 
 	for {
 		currentTime := time.Now()
-		if currentTime.Weekday() == time.Monday && currentTime.Hour() == 17-5 && currentTime.Minute() == 22 {
-			fmt.Println("tets")
+		if currentTime.Weekday() == time.Sunday && currentTime.Hour() == 8-5 && currentTime.Minute() == 0 {
 			e.Usecase.BDay.LoadBDays(currentTime)
 			time.Sleep(time.Minute)
 		}
