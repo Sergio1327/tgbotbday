@@ -31,7 +31,7 @@ func (e *BOT) RunBOT(sm transaction.SessionManager) {
 
 	for {
 		currentTime := time.Now()
-		if currentTime.Weekday() == time.Monday && currentTime.Hour() == 16 && currentTime.Minute() == 50 {
+		if currentTime.Weekday() == time.Monday && currentTime.Hour() == 17 && currentTime.Minute() == 5 {
 			fmt.Println("tets")
 			e.Usecase.BDay.LoadBDays(currentTime)
 			time.Sleep(time.Minute)
