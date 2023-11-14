@@ -28,12 +28,6 @@ func (e *BOT) RunBOT(sm transaction.SessionManager) {
 	u.Timeout = 60
 	e.log.Infoln("бот запущен")
 
-	for {
-		currentTime := time.Now()
-		if currentTime.Weekday() == time.Sunday && currentTime.Hour() == 8-5 && currentTime.Minute() == 0 {
-			e.Usecase.BDay.LoadBDays(currentTime)
-			time.Sleep(time.Minute)
-		}
-	}
-
+	currentTime := time.Now()
+	e.Usecase.BDay.LoadBDays(currentTime)
 }
