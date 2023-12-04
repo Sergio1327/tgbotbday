@@ -2,6 +2,7 @@ package external
 
 import (
 	"tgbot/internal/transaction"
+	"tgbot/tools/genproxy"
 	"tgbot/uimport"
 	"time"
 
@@ -23,11 +24,15 @@ func NewBOT(log *logrus.Logger, tgbot *tgbotapi.BotAPI, ui uimport.UsecaseImport
 	}
 }
 
-func (e *BOT) RunBOT(sm transaction.SessionManager) {
-	u := tgbotapi.NewUpdate(0)
-	u.Timeout = 60
-	e.log.Infoln("бот запущен")
+func (e *BOT) logPrefix() string {
+	return "[cron_external]"
+}
 
+func (e *BOT) RunBOT(sm transaction.SessionManager) {
+	e.log.Infoln("бот запущен")
 	currentTime := time.Now()
-	e.Usecase.BDay.LoadBDays(currentTime)
+
+	genproxy.TsWrapperForUsecase(e.log, e.SessionManager, func(ts transaction.Session) error {
+		return e.Usecase.BDay.LoadBDays(ts,currentTime)
+	}, e.logPrefix())
 }

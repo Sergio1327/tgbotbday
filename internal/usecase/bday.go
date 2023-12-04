@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"tgbot/internal/entity/bot"
 	"tgbot/internal/entity/global"
+	"tgbot/internal/transaction"
 	"tgbot/rimport"
 	"time"
 
@@ -27,12 +28,9 @@ func NewBDay(log, dblog *logrus.Logger, bot *tgbotapi.BotAPI, ri rimport.Reposit
 	}
 }
 
-func (u *BdayUsecase) LoadBDays(currentTime time.Time) error {
-	ts := u.SessionManager.CreateSession()
-	ts.Start()
-	defer ts.Rollback()
-
+func (u *BdayUsecase) LoadBDays(ts transaction.Session, currentTime time.Time) error {
 	lastWeek := currentTime.AddDate(0, 0, -7)
+
 	UserList, err := u.Repository.Bday.FindAllBdayPeople(ts, currentTime, lastWeek)
 	switch err {
 	case nil:
@@ -51,7 +49,7 @@ func (u *BdayUsecase) LoadBDays(currentTime time.Time) error {
 		msgText += fmt.Sprintf("\n%s \nДата дня рождения : %s \n", v.Name, v.BirthDate.Format("2006-01-02"))
 	}
 
-	msg := tgbotapi.NewMessage(bot.DVSHCHAtID, msgText)
+	msg := tgbotapi.NewMessage(bot.DevChatID, msgText)
 	_, err = u.bot.Send(msg)
 	if err != nil {
 		msg := tgbotapi.NewMessage(bot.DevChatID, err.Error())
@@ -69,6 +67,5 @@ func (u *BdayUsecase) LoadBDays(currentTime time.Time) error {
 		}
 	}
 
-	ts.Commit()
 	return nil
 }

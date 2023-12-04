@@ -22,7 +22,7 @@ func main() {
 	log := logger.NewNoFileLogger("tgbot1")
 	dblog := logger.NewNoFileLogger("tgbot")
 
-	db := pgdb.ConnectToSqLiteDB()
+	db := pgdb.ConnectToDB()
 	if err := db.Ping(); err != nil {
 		log.Fatal(err)
 	}
