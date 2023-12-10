@@ -49,7 +49,7 @@ func (u *BdayUsecase) LoadBDays(ts transaction.Session, currentTime time.Time) e
 		msgText += fmt.Sprintf("\n%s \nДата дня рождения : %s \n", v.Name, v.BirthDate.Format("2006-01-02"))
 	}
 
-	msg := tgbotapi.NewMessage(bot.DevChatID, msgText)
+	msg := tgbotapi.NewMessage(bot.DVSHCHAtID, msgText)
 	_, err = u.bot.Send(msg)
 	if err != nil {
 		msg := tgbotapi.NewMessage(bot.DevChatID, err.Error())
